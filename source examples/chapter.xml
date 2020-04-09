@@ -1,6 +1,9 @@
 <chapter id="0" name="Beginning of the end">
     <scenario id="0" name="introduction_5">
         <entry id="0">
+            <music action="start" effect="muffled" channel-name="battle-theme" name="battle_theme"
+                   start="0:00" loop="true" loop-start="0:25" loop-end="2:20" start-effect="fade-in"
+                   end-effect="fade-away"/>
             <!-- position should be in percentage -->
             <character id="0" state="mildly_annoyed_1" blinking="false" position-x="10" position-y="20"/>
             <character id="1" state="blank_expression" blinking="true" position-x="30" position-y="20"/>
@@ -9,6 +12,7 @@
             </text>
         </entry>
         <entry id="1" transition-style="slide-ltr">
+            <sound name="sword_clash_0" repeat="true" delay="5"/>
             <effect id="5" asynchronous="true" repeat="true"/>
             <effect id="3" asynchronous="false" queue="0"/>
         </entry>
@@ -20,6 +24,7 @@
             </text>
         </entry>
         <entry id="3">
+            <music action="stop" channel-name="battle-theme"/>
             <text style="centre-top thought">This might not be the best to approach him after all... I should...</text>
             <choice-box>
                 <choice redirect="hf_1" value="back-attack-in-this-battle">Stab him from behind</choice>

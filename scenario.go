@@ -24,8 +24,32 @@ type EntryModel struct {
 	ID              int              `xml:"id,attr"`
 	TransitionStyle string           `xml:"transition-style,attr"`
 	Characters      []CharacterModel `xml:"character"`
+	MusicEvents     []MusicModel     `xml:"music"`
+	Sounds          []SoundModel     `xml:"sound"`
 	Text            TextModel        `xml:"text"`
 	ChoiceBox       ChoiceBoxModel   `xml:"choice-box"`
+}
+
+// MusicModel represents a music event entry that occurs in a given frame.
+type MusicModel struct {
+	XMLName            xml.Name `xml:"music"`
+	ActionName         string   `xml:"action,attr"`
+	AppliedEffect      string   `xml:"effect,attr"`
+	ChannelName        string   `xml:"channel-name,attr"`
+	MusicName          string   `xml:"name,attr"`
+	StartTimestamp     string   `xml:"start,attr"`
+	Loops              bool     `xml:"loop,attr"`
+	LoopStartTimestamp string   `xml:"loop-start,attr"`
+	LoopEndTimestamp   string   `xml:"loop-end,attr"`
+	StartEffect        string   `xml:"start-effect,attr"`
+	EndEffect          string   `xml:"end-effect,attr"`
+}
+
+// SoundModel represents a sound that occurs in a given frame.
+type SoundModel struct {
+	Name   string `xml:"name,attr"`
+	Repeat bool   `xml:"repeat,attr"`
+	Delay  uint8  `xml:"delay,attr"`
 }
 
 // EffectModel represents a definition of either a visual effect or an animation that will take place in the given frame.
