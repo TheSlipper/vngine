@@ -1,5 +1,6 @@
 package vngine
 
+// stateMachine is an entity responsible for management of the game states.
 type stateMachine struct {
 	stack       stateStack
 	newState    State
@@ -8,6 +9,7 @@ type stateMachine struct {
 	isReplacing bool
 }
 
+// addState queues the putting of the given state on top of the stateMachine's stack.
 func (s *stateMachine) addState(st State, replaces bool) {
 	s.isAdding = true
 	s.isReplacing = replaces
@@ -15,10 +17,12 @@ func (s *stateMachine) addState(st State, replaces bool) {
 	s.newState = st
 }
 
+// rmTopState queues the removal of the state on top of the state machine's stack.
 func (s *stateMachine) rmTopState() {
 	s.isRemoving = true
 }
 
+// processStateChanges processes the queued events.
 func (s *stateMachine) processStateChanges() {
 	if s.isRemoving && !s.stack.isEmpty() {
 		s.stack.pop()
@@ -44,6 +48,7 @@ func (s *stateMachine) processStateChanges() {
 	}
 }
 
+// getActiveState returns the pointer to the top state of the stack.
 func (s *stateMachine) getActiveState() *State {
 	return s.stack.peek()
 }

@@ -15,6 +15,7 @@ type stateStack struct {
 	length int
 }
 
+// stateNode is a single node used in the stateStack.
 type stateNode struct {
 	val *State
 	prev *stateNode
@@ -26,6 +27,7 @@ func NewStateStack() *stateStack {
 	return &stateStack{nil, 0}
 }
 
+// isEmpty checks whether the stack is empty.
 func (s *stateStack) isEmpty() bool {
 	return s.length == 0
 }

@@ -34,6 +34,7 @@ func (ts *testState) resume() {
 	fmt.Println("resume call")
 }
 
+// TestStateMachine tests whether state machine is working correctly.
 func TestStateMachine(t *testing.T) {
 	var st State
 	sm := stateMachine{isRemoving:false,isAdding:false,isReplacing:false}
