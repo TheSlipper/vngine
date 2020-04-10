@@ -118,7 +118,7 @@ type EffectModel struct {
 type CharacterModel struct {
 	XMLName   xml.Name `xml:"character"`
 	ID        int      `xml:"id,attr"`
-	State     string   `xml:"state,attr"`
+	State     string   `xml:"State,attr"`
 	Blinking  bool     `xml:"blinking,attr"`
 	PositionX uint8    `xml:"position-x,attr"`
 	PositionY uint8    `xml:"position-y,attr"`
