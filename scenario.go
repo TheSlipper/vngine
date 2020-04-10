@@ -1,6 +1,59 @@
 package vnginelib
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"fmt"
+	"io/ioutil"
+)
+
+// GetChapterFromFile reads the xml file and parses it into the defined models.
+func GetChapterFromFile(file string) (cm ChapterModel, err error) {
+	var xmlData []byte
+	xmlData, err = ioutil.ReadFile(file)
+	if err != nil {
+		err = fmt.Errorf("error while trying to read from the file '%s': %+v", file, err)
+		return
+	}
+	err = xml.Unmarshal(xmlData, &cm)
+	if err != nil {
+		err = fmt.Errorf("error while trying to interpret chapter file '%s': %+v", file, err)
+	}
+	return
+}
+
+// GetScenarioFromFileByName reads the xml file and extracts the given scenario from the file.
+func GetScenarioFromFileByName(name, file string) (sc ScenarioModel, err error) {
+	var cm ChapterModel
+	cm, err = GetChapterFromFile(file)
+	if err != nil {
+		return
+	}
+	for _, sci := range cm.Scenarios {
+		if sci.Name == name {
+			sc = sci
+			return
+		}
+	}
+	err = fmt.Errorf("no such specified scenario as '%s' in the chapter '%s'", name, cm.Name)
+	return
+}
+
+// GetScenarioFromFileByID reads the xml file and extracts the given scenario from the file.
+func GetScenarioFromFileByID(id int, file string) (sc ScenarioModel, err error) {
+	var cm ChapterModel
+	cm, err = GetChapterFromFile(file)
+	if err != nil {
+		return
+	}
+	for _, sci := range cm.Scenarios {
+		if sci.ID == id {
+			sc = sci
+			return
+		}
+	}
+	err = fmt.Errorf("scenario with the '%d' id was not found in the chapter '%s'", id, cm.Name)
+	return
+}
 
 // ChapterModel represents a chapter in a novel scripting file.
 type ChapterModel struct {

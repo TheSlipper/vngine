@@ -1,18 +1,21 @@
 package vnginelib
 
 import (
-	"encoding/xml"
-	"io/ioutil"
 	"testing"
 )
 
+// TestScenarioParsing the parsing of a correctly formatted vngine script file.
 func TestScenarioParsing(t *testing.T) {
-	chapter := ChapterModel {}
-	xmlData, err := ioutil.ReadFile("source examples/chapter.xml")
+	filePath := "source examples/chapter.xml"
+	_, err := GetChapterFromFile(filePath)
 	if err != nil {
 		panic(err)
 	}
-	err = xml.Unmarshal(xmlData, &chapter)
+	_, err = GetScenarioFromFileByID(0, filePath)
+	if err != nil {
+		panic(err)
+	}
+	_, err = GetScenarioFromFileByName("introduction_5", filePath)
 	if err != nil {
 		panic(err)
 	}
