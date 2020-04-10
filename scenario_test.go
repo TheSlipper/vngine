@@ -6,7 +6,7 @@ import (
 
 // TestScenarioParsing the parsing of a correctly formatted vngine script file.
 func TestScenarioParsing(t *testing.T) {
-	filePath := "source examples/chapter.xml"
+	filePath := "source examples/chapter.vnscript"
 	_, err := GetChapterFromFile(filePath)
 	if err != nil {
 		panic(err)
