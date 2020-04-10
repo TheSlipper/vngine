@@ -1,4 +1,4 @@
-package vnginelib
+package vngine
 
 import (
 	"testing"
