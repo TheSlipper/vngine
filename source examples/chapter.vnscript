@@ -34,4 +34,14 @@
             </choice-box>
         </entry>
     </scenario>
+    <scenario id="1" name="hf_1">
+        <entry id="0" redirect="end_credits">
+            <text>This is an example how u can redirect without a choice box</text>
+        </entry>
+    </scenario>
+    <scenario id="2" name="end_credits">
+        <entry id="0">
+            <text>If this entry is finished and it has no redirect, the game will end/shut down!</text>
+        </entry>
+    </scenario>
 </chapter>

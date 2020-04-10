@@ -76,6 +76,7 @@ type EntryModel struct {
 	XMLName         xml.Name         `xml:"entry"`
 	ID              int              `xml:"id,attr"`
 	TransitionStyle string           `xml:"transition-style,attr"`
+	RedirectPath    string           `xml:"redirect,attr"`
 	Characters      []CharacterModel `xml:"character"`
 	MusicEvents     []MusicModel     `xml:"music"`
 	Sounds          []SoundModel     `xml:"sound"`
