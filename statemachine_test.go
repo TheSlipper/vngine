@@ -6,44 +6,46 @@ import (
 	"time"
 )
 
-func newTestState(data *gameData) (ts testState) {
+func newTestState(data *GameData) (ts testState) {
 	ts.gd = data
 	return
 }
 
 type testState struct {
-	gd *gameData
+	gd *GameData
 	val      int
 	initTime time.Time
 }
 
-func (ts *testState) init() {
+func (ts *testState) Init() {
 	ts.initTime = time.Now()
-	fmt.Println("init call")
+	fmt.Println("Init call")
 }
 
-func (ts *testState) handleInput() {
+func (ts *testState) HandleInput() {
 	fmt.Println("handle input call")
 }
 
-func (ts *testState) update(dt time.Duration) {
+func (ts *testState) Update(dt time.Duration) {
 	ts.val++
-	fmt.Println("update number", ts.val)
+	fmt.Println("Update number", ts.val)
 	if time.Now().Sub(ts.initTime).Seconds() >= 1 {
 		fmt.Println("Turning it off")
 		ts.gd.StateMachine.rmTopState()
 	}
 }
 
-func (ts *testState) draw(dt time.Duration) {
+func (ts *testState) Draw(dt time.Duration) {
+	//ts.gd.window.Clear(colornames.Skyblue)
+	//ts.gd.window.Update()
 }
 
-func (ts *testState) pause() {
-	fmt.Println("pause call")
+func (ts *testState) Pause() {
+	fmt.Println("Pause call")
 }
 
-func (ts *testState) resume() {
-	fmt.Println("resume call")
+func (ts *testState) Resume() {
+	fmt.Println("Resume call")
 }
 
 // TestStateMachine tests whether state machine is working correctly.

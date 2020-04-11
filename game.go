@@ -1,6 +1,9 @@
 package vngine
 
 import (
+	"fmt"
+	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
 	"time"
 )
 
@@ -8,56 +11,65 @@ const dt = time.Second / 60.0
 
 // NewGame is a simple constructor for the game struct.
 func NewGame(settings, scenario string) (g game, err error) {
-	g.gameData = new(gameData)
+	g.GameData = new(GameData)
 	g.settingsPath = settings
 	am := newAssetManager()
-	g.gameData.AssetManager = &am
-	g.gameData.StateMachine = &stateMachine{}
+	g.GameData.AssetManager = &am
+	g.GameData.StateMachine = &stateMachine{}
 	i, err := newInterpreter(scenario)
 	if err != nil {
 		return
 	}
-	g.gameData.Interpreter = &i
+	g.GameData.Interpreter = &i
 	return
 }
 
-// gameData is a struct that contains all of the data used for managing the game flow.
-type gameData struct {
+// GameData is a struct that contains all of the data used for managing the game flow.
+type GameData struct {
 	AssetManager *assetManager
 	StateMachine *stateMachine
 	Interpreter *interpreter
+	Window *pixelgl.Window
 }
 
 // game is a struct that represents the game entity.
 type game struct {
 	settingsPath string
-	gameData *gameData
+	GameData     *GameData
+	cfg          pixelgl.WindowConfig
 }
 
 // LoadSettings loads settings from the specified file.
 func (g *game) LoadSettings() (err error) {
 	// TODO: Make a model with all the necessary settings. Load the settings from an xml file into that model.
+	g.cfg = pixelgl.WindowConfig {
+		Title: "vngine",
+		Bounds: pixel.R(0, 0, 1280, 720),
+		VSync: true,
+	}
+	g.GameData.Window, err = pixelgl.NewWindow(g.cfg)
+	if err != nil {
+		return
+	}
 	return
 }
 
 // Run starts the game.
 func (g *game) Run(st State) {
 	// Load the passed state
-	g.gameData.StateMachine.addState(st, true)
+	g.GameData.StateMachine.addState(st, true)
 
-	// Do magic TODO: Document this
 	var newTime time.Time
 	var frameTime, accumulator, interpolation time.Duration
 	currentTime := time.Now()
 
-	// TODO: While window is open
-	// TODO: Test this out
-	for {
-		if !g.gameData.StateMachine.hasStates() {
+	for !g.GameData.Window.Closed() {
+		g.GameData.StateMachine.processStateChanges()
+
+		if !g.GameData.StateMachine.hasStates() {
+			fmt.Println("No more states. Closing the window")
 			return
 		}
-
-		g.gameData.StateMachine.processStateChanges()
 
 		newTime = time.Now()
 		frameTime = newTime.Sub(currentTime)
@@ -69,16 +81,16 @@ func (g *game) Run(st State) {
 		currentTime = time.Now()
 		accumulator += frameTime
 
-		s := *g.gameData.StateMachine.getActiveState()
+		s := *g.GameData.StateMachine.getActiveState()
 
 		for accumulator >= dt {
-			s.handleInput()
-			s.update(dt)
+			s.HandleInput()
+			s.Update(dt)
 
 			accumulator -= dt
 		}
 
 		interpolation = accumulator / dt
-		s.draw(interpolation)
+		s.Draw(interpolation)
 	}
 }

@@ -3,12 +3,12 @@ package vngine
 import "time"
 
 type State interface {
-	init()
-	handleInput()
-	update(dt time.Duration)
-	draw(dt time.Duration)
-	pause()
-	resume()
+	Init()
+	HandleInput()
+	Update(dt time.Duration)
+	Draw(dt time.Duration)
+	Pause()
+	Resume()
 }
 
 // stateStack is a stack that contains State interfaces.

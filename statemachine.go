@@ -28,7 +28,7 @@ func (s *stateMachine) processStateChanges() {
 		s.stack.pop()
 		if !s.stack.isEmpty() {
 			st := *s.stack.peek()
-			st.resume()
+			st.Resume()
 		}
 		s.isRemoving = false
 	}
@@ -38,12 +38,12 @@ func (s *stateMachine) processStateChanges() {
 				_ = s.stack.pop()
 			} else {
 				st := *s.stack.peek()
-				st.pause()
+				st.Pause()
 			}
 		}
 		s.stack.push(&s.newState)
 		st := *s.stack.peek()
-		st.init()
+		st.Init()
 		s.isAdding = false
 	}
 }
