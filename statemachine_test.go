@@ -26,7 +26,7 @@ func (ts *testState) HandleInput() {
 	fmt.Println("handle input call")
 }
 
-func (ts *testState) Update(dt time.Duration) {
+func (ts *testState) Update(dt float64) {
 	ts.val++
 	fmt.Println("Update number", ts.val)
 	if time.Now().Sub(ts.initTime).Seconds() >= 1 {
@@ -35,7 +35,7 @@ func (ts *testState) Update(dt time.Duration) {
 	}
 }
 
-func (ts *testState) Draw(dt time.Duration) {
+func (ts *testState) Draw(dt float64) {
 	//ts.gd.window.Clear(colornames.Skyblue)
 	//ts.gd.window.Update()
 }

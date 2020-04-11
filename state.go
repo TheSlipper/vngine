@@ -1,12 +1,10 @@
 package vngine
 
-import "time"
-
 type State interface {
 	Init()
 	HandleInput()
-	Update(dt time.Duration)
-	Draw(dt time.Duration)
+	Update(dt float64)
+	Draw(dt float64)
 	Pause()
 	Resume()
 }

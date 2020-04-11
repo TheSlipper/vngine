@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const dt = time.Second / 60.0
+const dt = 1.0 / 60.0
 
 // NewGame is a simple constructor for the game struct.
 func NewGame(settings, scenario string) (g game, err error) {
@@ -16,6 +16,7 @@ func NewGame(settings, scenario string) (g game, err error) {
 	am := newAssetManager()
 	g.GameData.AssetManager = &am
 	g.GameData.StateMachine = &stateMachine{}
+	g.GameData.StartTime = time.Now()
 	i, err := newInterpreter(scenario)
 	if err != nil {
 		return
@@ -30,6 +31,7 @@ type GameData struct {
 	StateMachine *stateMachine
 	Interpreter *interpreter
 	Window *pixelgl.Window
+	StartTime time.Time
 }
 
 // game is a struct that represents the game entity.
@@ -59,11 +61,11 @@ func (g *game) Run(st State) {
 	// Load the passed state
 	g.GameData.StateMachine.addState(st, true)
 
-	var newTime time.Time
-	var frameTime, accumulator, interpolation time.Duration
-	currentTime := time.Now()
+	// Placeholder for the current state
+	var s State
 
 	for !g.GameData.Window.Closed() {
+
 		g.GameData.StateMachine.processStateChanges()
 
 		if !g.GameData.StateMachine.hasStates() {
@@ -71,26 +73,10 @@ func (g *game) Run(st State) {
 			return
 		}
 
-		newTime = time.Now()
-		frameTime = newTime.Sub(currentTime)
-
-		if frameTime.Milliseconds() > 250 {
-			frameTime = time.Millisecond * 250
-		}
-
-		currentTime = time.Now()
-		accumulator += frameTime
-
-		s := *g.GameData.StateMachine.getActiveState()
-
-		for accumulator >= dt {
-			s.HandleInput()
-			s.Update(dt)
-
-			accumulator -= dt
-		}
-
-		interpolation = accumulator / dt
-		s.Draw(interpolation)
+		s = *g.GameData.StateMachine.getActiveState()
+		s.HandleInput()
+		s.Update(dt)
+		s.Draw(dt)
+		g.GameData.Window.Update()
 	}
 }
