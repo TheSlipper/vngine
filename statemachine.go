@@ -52,3 +52,7 @@ func (s *stateMachine) processStateChanges() {
 func (s *stateMachine) getActiveState() *State {
 	return s.stack.peek()
 }
+
+func (s *stateMachine) hasStates() bool {
+	return !(s.stack.length == 0)
+}

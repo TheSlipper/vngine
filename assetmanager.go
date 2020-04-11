@@ -10,12 +10,14 @@ import (
 )
 
 // newAssetManager is a simple constructor for the assetManager struct.
-func newAssetManager() assetManager {
-	return assetManager{make(map[string]*pixel.PictureData)}
+func newAssetManager() (am assetManager) {
+	am = assetManager{make(map[string]*pixel.PictureData)}
+	return
 }
 
 // assetManager is an entity that loads the textures and frees them from the memory.
 type assetManager struct {
+	// TODO: Perhaps a mutex for loading the textures so that the game does not stop
 	textures map[string]*pixel.PictureData
 	// TODO: Sounds and music
 }

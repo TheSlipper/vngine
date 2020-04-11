@@ -69,7 +69,7 @@ func scenarioPathToFilePath(sp string) (fp, sc string) {
 	parts := strings.Split(sp, "/")
 	sb := strings.Builder{}
 	sb.WriteString(parts[0])
-	for i := 1; i < len(parts)-2; i++ {
+	for i := 1; i < len(parts)-1; i++ {
 		sb.WriteString("/")
 		sb.WriteString(parts[i])
 	}
