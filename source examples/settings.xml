@@ -1,0 +1,13 @@
+<settings>
+    <name>VNgine sample project</name>
+    <vsync>true</vsync>
+    <resizable>false</resizable>
+    <width>1280</width>
+    <height>720</height>
+    <undecorated>false</undecorated>
+    <ontop>false</ontop>
+    <icon>textures/test.png</icon>
+    <fullscreen>false</fullscreen>
+<!--    <window vsync="true" resizable="false" width="1280" height="720" undecorated="false"-->
+<!--        always-on-top="false" icon-path="textures/test.png" fullscreen="false"/>-->
+</settings>

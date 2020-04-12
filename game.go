@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	"log"
 	"time"
 )
 
@@ -43,12 +44,23 @@ type game struct {
 
 // LoadSettings loads settings from the specified file.
 func (g *game) LoadSettings() (err error) {
-	// TODO: Make a model with all the necessary settings. Load the settings from an xml file into that model.
-	g.cfg = pixelgl.WindowConfig {
-		Title: "vngine",
-		Bounds: pixel.R(0, 0, 1280, 720),
-		VSync: true,
+	// Load up the settings model from the file
+	var sm SettingsModel
+	sm, err = getSettingsModelFromFile(g.settingsPath)
+	if err != nil {
+		log.Fatal(err)
 	}
+	// Apply it to the windowconfig struct
+	// TODO: Fullscreen and icon
+	g.cfg = pixelgl.WindowConfig {
+		Title: sm.Name,
+		Bounds: pixel.R(0, 0, sm.Width, sm.Height),
+		VSync: sm.VSync,
+		Resizable: sm.Resizable,
+		Undecorated: sm.Undecorated,
+		AlwaysOnTop: sm.AlwaysOnTop,
+	}
+	// Create the window and save the pointer to it in the game struct
 	g.GameData.Window, err = pixelgl.NewWindow(g.cfg)
 	if err != nil {
 		return
