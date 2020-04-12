@@ -1,3 +1,3 @@
-# vnginelib
+# vngine
 
-Package containing a set of utilities used by the vngine.
+Simple and robust visual novel engine.
