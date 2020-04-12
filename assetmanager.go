@@ -1,17 +1,36 @@
+//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////// LICENCE
+// VNgine - a simple robust visual novel engine.
+// Copyright© 2020 Kornel Domeradzki
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package vngine
 
 import (
 	"fmt"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/text"
-	"github.com/golang/freetype/truetype"
-	"golang.org/x/image/font"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
-	"io/ioutil"
 	"os"
 )
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////// SHORT DESCRIPTION
+// This file contains all of the structs and functions associated with the asset manager.
 
 // newAssetManager is a simple constructor for the assetManager struct.
 func newAssetManager() assetManager {
@@ -23,9 +42,8 @@ func newAssetManager() assetManager {
 
 // assetManager is an entity that loads the textures and frees them from the memory.
 type assetManager struct {
-	// TODO: Perhaps a mutex for loading the textures so that the game does not stop
 	textures map[string]*pixel.PictureData
-	atlases map[string]*text.Atlas
+	atlases  map[string]*text.Atlas
 	// TODO: Sounds and music
 }
 
@@ -75,28 +93,4 @@ func (am *assetManager) RmAtlas(atlasName string) {
 // GetAtlas returns the pointer to the atlas corresponding to the passed name.
 func (am *assetManager) GetAtlas(atlasName string) *text.Atlas {
 	return am.atlases[atlasName]
-}
-
-// loadTTF loads the font's face from a TTF file.
-func loadTTF(path string, size float64) (font.Face, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-
-	bytes, err := ioutil.ReadAll(f)
-	if err != nil {
-		return nil, err
-	}
-
-	ft, err := truetype.Parse(bytes)
-	if err != nil {
-		return nil, err
-	}
-
-	return truetype.NewFace(ft, &truetype.Options{
-		Size: size,
-		GlyphCacheEntries: 1,
-	}), nil
 }

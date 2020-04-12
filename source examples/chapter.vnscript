@@ -1,4 +1,14 @@
 <chapter id="0" name="chapter">
+<!--    TODO: Structure of the assets - keep in mind that effects have textures as well -->
+    <assets>
+        <songs>
+            <song src="music/battle_theme.ogg" name="battle-theme"/>
+        </songs>
+        <sounds>
+            <sound src="sound/clash_sound.ogg" name="clash"/>
+        </sounds>
+        <characters path="vn-chars"/>
+    </assets>
     <scenario id="0" name="introduction_5">
         <entry id="0">
             <music action="start" effect="muffled" channel-name="battle-theme" name="battle_theme"

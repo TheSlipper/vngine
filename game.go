@@ -1,3 +1,21 @@
+//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////// LICENCE
+// VNgine - a simple robust visual novel engine.
+// Copyright© 2020 Kornel Domeradzki
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package vngine
 
 import (
@@ -7,6 +25,11 @@ import (
 	"log"
 	"time"
 )
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////// SHORT DESCRIPTION
+// This file contains the constructor and definition of the game singleton and its state-shared
+// subcomponent called gamedata.
 
 const dt = 1.0 / 60.0
 
@@ -18,11 +41,6 @@ func NewGame(settings, scenario string) (g game, err error) {
 	g.GameData.AssetManager = &am
 	g.GameData.StateMachine = &stateMachine{}
 	g.GameData.StartTime = time.Now()
-	i, err := newInterpreter(scenario)
-	if err != nil {
-		return
-	}
-	g.GameData.Interpreter = &i
 	return
 }
 
@@ -30,9 +48,8 @@ func NewGame(settings, scenario string) (g game, err error) {
 type GameData struct {
 	AssetManager *assetManager
 	StateMachine *stateMachine
-	Interpreter *interpreter
-	Window *pixelgl.Window
-	StartTime time.Time
+	Window       *pixelgl.Window
+	StartTime    time.Time
 }
 
 // game is a struct that represents the game entity.
@@ -52,11 +69,11 @@ func (g *game) LoadSettings() (err error) {
 	}
 	// Apply it to the windowconfig struct
 	// TODO: Fullscreen and icon
-	g.cfg = pixelgl.WindowConfig {
-		Title: sm.Name,
-		Bounds: pixel.R(0, 0, sm.Width, sm.Height),
-		VSync: sm.VSync,
-		Resizable: sm.Resizable,
+	g.cfg = pixelgl.WindowConfig{
+		Title:       sm.Name,
+		Bounds:      pixel.R(0, 0, sm.Width, sm.Height),
+		VSync:       sm.VSync,
+		Resizable:   sm.Resizable,
 		Undecorated: sm.Undecorated,
 		AlwaysOnTop: sm.AlwaysOnTop,
 	}

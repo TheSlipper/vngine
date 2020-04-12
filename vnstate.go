@@ -20,14 +20,55 @@ package vngine
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////// SHORT DESCRIPTION
-// This file contains a definition of the state interface.
+// This file contains an implementation of the state interface that is responsible for the main state of
+// the visual novel (the game - reading, animations, etc.).
 
-// State is an interface that defines behaviour of a state of the game (e.g.: menu state).
-type State interface {
-	Init()
-	HandleInput()
-	Update(dt float64)
-	Draw(dt float64)
-	Pause()
-	Resume()
+func NewVNState(scenPath string) (vns VNState, err error) {
+	var interp interpreter
+	interp, err = newInterpreter(scenPath)
+	if err != nil {
+		return
+	}
+	vns.interp = &interp
+	return
+}
+
+// VNState is a state that uses the vngine interpreter and reads the story from it.
+type VNState struct {
+	gd                *GameData
+	firstScenarioPath string
+	interp            *interpreter
+	currEntry         EntryModel
+}
+
+func (vns *VNState) Init() {
+	vns.currEntry = vns.interp.nextEntry()
+}
+
+func (vns *VNState) HandleInput() {
+	// TODO:
+}
+
+func (vns *VNState) Update(dt float64) {
+	// TODO: Maybe delete since there is no physics here?
+}
+
+func (vns *VNState) Draw(dt float64) {
+
+}
+
+func (vns *VNState) Pause() {
+
+}
+
+func (vns *VNState) Resume() {
+
+}
+
+func (vns *VNState) handleMusic() {
+
+}
+
+func (vns *VNState) handleSounds() {
+
 }

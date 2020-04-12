@@ -1,3 +1,21 @@
+//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////// LICENCE
+// VNgine - a simple robust visual novel engine.
+// Copyright© 2020 Kornel Domeradzki
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package vngine
 
 import (
@@ -5,6 +23,11 @@ import (
 	"fmt"
 	"io/ioutil"
 )
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////// SHORT DESCRIPTION
+// This file contains all of the models and functions used for extraction and representation of the engine's
+// scripting language.
 
 // GetChapterFromFile reads the xml file and parses it into the defined models.
 func GetChapterFromFile(file string) (cm ChapterModel, err error) {
@@ -69,6 +92,12 @@ type ScenarioModel struct {
 	ID      int          `xml:"id,attr"`
 	Name    string       `xml:"name,attr"`
 	Entries []EntryModel `xml:"entry"`
+	Assets  AssetsModel  `xml:"assets"`
+}
+
+type AssetsModel struct {
+	XMLName xml.Name `xml:"assets"`
+	// TODO:
 }
 
 // EntryModel represents a single frame in the novel.

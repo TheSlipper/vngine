@@ -18,16 +18,37 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package vngine
 
+import (
+	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font"
+	"io/ioutil"
+	"os"
+)
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////// SHORT DESCRIPTION
-// This file contains a definition of the state interface.
+// This file contains helper functions used for font data manipulation.
 
-// State is an interface that defines behaviour of a state of the game (e.g.: menu state).
-type State interface {
-	Init()
-	HandleInput()
-	Update(dt float64)
-	Draw(dt float64)
-	Pause()
-	Resume()
+// loadTTF loads the font's face from a TTF file.
+func loadTTF(path string, size float64) (font.Face, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	bytes, err := ioutil.ReadAll(f)
+	if err != nil {
+		return nil, err
+	}
+
+	ft, err := truetype.Parse(bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return truetype.NewFace(ft, &truetype.Options{
+		Size:              size,
+		GlyphCacheEntries: 1,
+	}), nil
 }
