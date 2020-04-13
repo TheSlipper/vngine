@@ -8,6 +8,7 @@
     <ontop>false</ontop>
     <icon>textures/test.png</icon>
     <fullscreen>false</fullscreen>
+    <debug>true</debug>
 <!--    <window vsync="true" resizable="false" width="1280" height="720" undecorated="false"-->
 <!--        always-on-top="false" icon-path="textures/test.png" fullscreen="false"/>-->
 </settings>

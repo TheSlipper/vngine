@@ -55,4 +55,5 @@ type SettingsModel struct {
 	AlwaysOnTop bool     `xml:"ontop"`
 	Icon        string   `xml:"icon"`
 	Fullscreen  bool     `xml:"fullscreen"`
+	Debugging   bool     `xml:"debug"`
 }
