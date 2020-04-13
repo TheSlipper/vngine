@@ -96,7 +96,7 @@ func (g *game) LoadSettings() (err error) {
 		// Debug data
 		dbg.dbgData = text.New(pixel.V(0, 0), g.GameData.AssetManager.atlases["debug_atlas"])
 		dbg.dbgData.Color = colornames.Yellow
-		dbg.dbgDataFormat = "Build %s\r\nFramerate: %d FPS\r\nCurrently loaded state: %s"
+		dbg.dbgDataFormat = "Build %s\r\nFramerate: %d FPS\r\nCurrently loaded state: %s\r\n%s"
 		dbg.tick = time.Tick(time.Second)
 
 		// Debug log
@@ -147,7 +147,7 @@ func (g *game) DebugDataProcessing(s State) {
 	default:
 	}
 	dbg.dbgData.Clear()
-	_, _ = fmt.Fprintf(dbg.dbgData, dbg.dbgDataFormat, VERSION, dbg.fps, s.Name())
+	_, _ = fmt.Fprintf(dbg.dbgData, dbg.dbgDataFormat, VERSION, dbg.fps, s.Name(), GetMemUsage())
 	dbg.dbgData.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V(5, g.sett.Height - dbg.dbgData.LineHeight)))
 	dbg.dbgLog.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V((g.sett.Width - dbg.dbgLog.Bounds().W()) - 5,
 		g.sett.Height - dbg.dbgData.LineHeight)))
