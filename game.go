@@ -49,15 +49,6 @@ func NewGame(settings, scenario string) (g game, err error) {
 	return
 }
 
-// DebugData contains the information on the debugging session.
-type DebugData struct {
-	dbgDataFormat string
-	dbgTxt        *text.Text
-	fps           int
-	fpsAcc        int
-	tick          <-chan time.Time
-}
-
 // GameData is a struct that contains all of the data used for managing the game flow.
 type GameData struct {
 	AssetManager *assetManager
@@ -72,7 +63,6 @@ type game struct {
 	GameData     *GameData
 	cfg          pixelgl.WindowConfig
 	sett         SettingsModel
-	dbg          DebugData
 }
 
 // LoadSettings loads settings from the specified file.
@@ -100,11 +90,18 @@ func (g *game) LoadSettings() (err error) {
 
 	// If the game is in debug mode then also load stuff for debugging
 	if g.sett.Debugging {
+		dbg = new(DebugData)
 		g.GameData.AssetManager.atlases["debug_atlas"] = text.NewAtlas(basicfont.Face7x13, text.ASCII)
-		g.dbg.dbgTxt = text.New(pixel.V(0, 0), g.GameData.AssetManager.atlases["debug_atlas"])
-		g.dbg.dbgTxt.Color = colornames.Yellow
-		g.dbg.dbgDataFormat = "Build %s\r\nFramerate: %d FPS\r\nCurrently loaded state: %s"
-		g.dbg.tick = time.Tick(time.Second)
+
+		// Debug data
+		dbg.dbgData = text.New(pixel.V(0, 0), g.GameData.AssetManager.atlases["debug_atlas"])
+		dbg.dbgData.Color = colornames.Yellow
+		dbg.dbgDataFormat = "Build %s\r\nFramerate: %d FPS\r\nCurrently loaded state: %s"
+		dbg.tick = time.Tick(time.Second)
+
+		// Debug log
+		dbg.dbgLog = text.New(pixel.V(0, 0), g.GameData.AssetManager.atlases["debug_atlas"])
+		dbg.dbgLog.Color = colornames.Yellow
 	}
 
 	return
@@ -135,21 +132,23 @@ func (g *game) Run(st State) {
 
 		// If debugging then also draw the debug data
 		if g.sett.Debugging {
-			g.DebugDataProcessing()
+			g.DebugDataProcessing(s)
 		}
 		g.GameData.Window.Update()
 	}
 }
 
-func (g *game) DebugDataProcessing() {
-	g.dbg.fpsAcc++
+func (g *game) DebugDataProcessing(s State) {
+	dbg.fpsAcc++
 	select {
-	case <-g.dbg.tick:
-		g.dbg.fps = g.dbg.fpsAcc
-		g.dbg.fpsAcc = 0
+	case <-dbg.tick:
+		dbg.fps = dbg.fpsAcc
+		dbg.fpsAcc = 0
 	default:
 	}
-	g.dbg.dbgTxt.Clear()
-	_, _ = fmt.Fprintf(g.dbg.dbgTxt, g.dbg.dbgDataFormat, VERSION, g.dbg.fps, "todo: load the state name")
-	g.dbg.dbgTxt.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V(0, g.sett.Height - g.dbg.dbgTxt.LineHeight)))
+	dbg.dbgData.Clear()
+	_, _ = fmt.Fprintf(dbg.dbgData, dbg.dbgDataFormat, VERSION, dbg.fps, s.Name())
+	dbg.dbgData.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V(5, g.sett.Height - dbg.dbgData.LineHeight)))
+	dbg.dbgLog.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V((g.sett.Width - dbg.dbgLog.Bounds().W()) - 5,
+		g.sett.Height - dbg.dbgData.LineHeight)))
 }

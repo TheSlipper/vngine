@@ -39,9 +39,11 @@ type VNState struct {
 	firstScenarioPath string
 	interp            *interpreter
 	currEntry         EntryModel
+	name              string
 }
 
 func (vns *VNState) Init() {
+	vns.name = "vngine interpreter state"
 	vns.currEntry = vns.interp.nextEntry()
 }
 
@@ -63,6 +65,10 @@ func (vns *VNState) Pause() {
 
 func (vns *VNState) Resume() {
 
+}
+
+func (vns *VNState) Name() string {
+	return vns.name
 }
 
 func (vns *VNState) handleMusic() {

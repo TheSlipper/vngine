@@ -30,4 +30,5 @@ type State interface {
 	Draw(dt float64)
 	Pause()
 	Resume()
+	Name() string
 }
