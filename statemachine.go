@@ -28,14 +28,14 @@ import "runtime"
 // stateMachine is an entity responsible for management of the game states.
 type stateMachine struct {
 	stack       stateStack
-	newState    State
+	newState    *State
 	isRemoving  bool
 	isAdding    bool
 	isReplacing bool
 }
 
 // addState queues the putting of the given state on top of the stateMachine's stack.
-func (s *stateMachine) addState(st State, replaces bool) {
+func (s *stateMachine) addState(st *State, replaces bool) {
 	s.isAdding = true
 	s.isReplacing = replaces
 
@@ -69,7 +69,7 @@ func (s *stateMachine) processStateChanges() {
 				st.Pause()
 			}
 		}
-		s.stack.push(&s.newState)
+		s.stack.push(s.newState)
 		st := *s.stack.peek()
 		st.Init()
 		s.isAdding = false

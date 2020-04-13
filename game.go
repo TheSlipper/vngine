@@ -26,6 +26,7 @@ import (
 	"golang.org/x/image/colornames"
 	"golang.org/x/image/font/basicfont"
 	"log"
+	"runtime"
 	"time"
 )
 
@@ -98,6 +99,7 @@ func (g *game) LoadSettings() (err error) {
 		dbg.dbgData.Color = colornames.Yellow
 		dbg.dbgDataFormat = "Build %s\r\nFramerate: %d FPS\r\nCurrently loaded state: %s\r\n%s"
 		dbg.tick = time.Tick(time.Second)
+		_, _ = fmt.Fprintf(dbg.dbgData, dbg.dbgDataFormat, VERSION, dbg.fps, "[Data not loaded yet]", GetMemUsage())
 
 		// Debug log
 		dbg.dbgLog = text.New(pixel.V(0, 0), g.GameData.AssetManager.atlases["debug_atlas"])
@@ -108,7 +110,7 @@ func (g *game) LoadSettings() (err error) {
 }
 
 // Run starts the game.
-func (g *game) Run(st State) {
+func (g *game) Run(st *State) {
 	// Load the passed state
 	g.GameData.StateMachine.addState(st, true)
 
@@ -144,10 +146,11 @@ func (g *game) DebugDataProcessing(s State) {
 	case <-dbg.tick:
 		dbg.fps = dbg.fpsAcc
 		dbg.fpsAcc = 0
+		dbg.dbgData.Clear()
+		_, _ = fmt.Fprintf(dbg.dbgData, dbg.dbgDataFormat, VERSION, dbg.fps, s.Name(), GetMemUsage())
+		runtime.GC()
 	default:
 	}
-	dbg.dbgData.Clear()
-	_, _ = fmt.Fprintf(dbg.dbgData, dbg.dbgDataFormat, VERSION, dbg.fps, s.Name(), GetMemUsage())
 	dbg.dbgData.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V(5, g.sett.Height - dbg.dbgData.LineHeight)))
 	dbg.dbgLog.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V((g.sett.Width - dbg.dbgLog.Bounds().W()) - 5,
 		g.sett.Height - dbg.dbgData.LineHeight)))
