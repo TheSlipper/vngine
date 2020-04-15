@@ -38,7 +38,7 @@ type DebugData struct {
 	dbgDataFormat string
 	dbgData       *text.Text
 	dbgLog        *text.Text
-	logLines []string
+	logLines      []string
 	fps           int
 	fpsAcc        int
 	tick          <-chan time.Time
@@ -46,6 +46,9 @@ type DebugData struct {
 
 // DebugLog prints out the given string with the timestamp of submission in the debug UI.
 func DebugLog(log string) {
+	if dbg == nil {
+		return
+	}
 	if len(dbg.logLines) == 20 {
 		dbg.logLines = dbg.logLines[:19]
 	}

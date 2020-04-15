@@ -18,8 +18,6 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package vngine
 
-import "runtime"
-
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////// SHORT DESCRIPTION
 // This file contains a basic state machine implementation used for management of the loaded
@@ -48,10 +46,9 @@ func (s *stateMachine) rmTopState() {
 }
 
 // processStateChanges processes the queued events.
-func (s *stateMachine) processStateChanges() {
-
+func (s *stateMachine) processStateChanges() (b bool){
 	if s.isRemoving && !s.stack.isEmpty() {
-		runtime.GC()
+		b = true
 		s.stack.pop()
 		if !s.stack.isEmpty() {
 			st := *s.stack.peek()
@@ -60,7 +57,7 @@ func (s *stateMachine) processStateChanges() {
 		s.isRemoving = false
 	}
 	if s.isAdding {
-		runtime.GC()
+		b = true
 		if !s.stack.isEmpty() {
 			if s.isReplacing {
 				_ = s.stack.pop()
@@ -74,6 +71,7 @@ func (s *stateMachine) processStateChanges() {
 		st.Init()
 		s.isAdding = false
 	}
+	return
 }
 
 // getActiveState returns the pointer to the top state of the stack.

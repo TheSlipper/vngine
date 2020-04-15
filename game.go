@@ -119,15 +119,16 @@ func (g *game) Run(st *State) {
 
 	for !g.GameData.Window.Closed() {
 
-		g.GameData.StateMachine.processStateChanges()
-
-		if !g.GameData.StateMachine.hasStates() {
+		dChanged := g.GameData.StateMachine.processStateChanges()
+		if dChanged && g.GameData.StateMachine.hasStates() {
+			s = *g.GameData.StateMachine.getActiveState()
+			runtime.GC()
+		} else if !g.GameData.StateMachine.hasStates() {
 			fmt.Println("No more states. Closing the window")
 			return
 		}
 
-		// Get the state and handle the input, game logic and drawing
-		s = *g.GameData.StateMachine.getActiveState()
+		// Handle the input, game logic and drawing
 		s.HandleInput()
 		s.Update(dt)
 		s.Draw(dt)
@@ -148,7 +149,6 @@ func (g *game) DebugDataProcessing(s State) {
 		dbg.fpsAcc = 0
 		dbg.dbgData.Clear()
 		_, _ = fmt.Fprintf(dbg.dbgData, dbg.dbgDataFormat, VERSION, dbg.fps, s.Name(), GetMemUsage())
-		runtime.GC()
 	default:
 	}
 	dbg.dbgData.Draw(g.GameData.Window, pixel.IM.Moved(pixel.V(5, g.sett.Height - dbg.dbgData.LineHeight)))

@@ -18,6 +18,8 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package vngine
 
+import "github.com/faiface/pixel/pixelgl"
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////// SHORT DESCRIPTION
 // This file contains an implementation of the state interface that is responsible for the main state of
@@ -48,7 +50,16 @@ func (vns *VNState) Init() {
 }
 
 func (vns *VNState) HandleInput() {
-	// TODO:
+	if vns.gd.Window.JustPressed(pixelgl.MouseButtonLeft) {
+		DebugLog("Left mouse button clicked")
+		// TODO: Some kind of check for clicking the UI
+	} else if vns.gd.Window.JustPressed(pixelgl.MouseButtonRight) {
+		DebugLog("Right mouse button clicked")
+	} else if vns.gd.Window.JustPressed(pixelgl.KeyLeftControl) || vns.gd.Window.JustPressed(pixelgl.KeyRightControl) {
+		DebugLog("Control button clicked")
+	} else if vec := vns.gd.Window.MouseScroll(); vec.X != 0 || vec.Y != 0 {
+		DebugLog("Mouse scrolled: " + vec.String())
+	}
 }
 
 func (vns *VNState) Update(dt float64) {
@@ -71,10 +82,6 @@ func (vns *VNState) Name() string {
 	return vns.name
 }
 
-func (vns *VNState) handleMusic() {
-
-}
-
-func (vns *VNState) handleSounds() {
+func (vns *VNState) loadAssets() {
 
 }
