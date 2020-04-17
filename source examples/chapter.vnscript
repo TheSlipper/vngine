@@ -1,57 +1,50 @@
-<chapter id="0" name="chapter">
-<!--    TODO: Structure of the assets - keep in mind that effects have textures as well -->
-    <assets>
-        <songs>
-            <song src="music/battle_theme.ogg" name="battle-theme"/>
-        </songs>
-        <sounds>
-            <sound src="sound/clash_sound.ogg" name="clash"/>
-        </sounds>
-        <characters path="vn-chars"/>
-    </assets>
-    <scenario id="0" name="introduction_5">
-        <entry id="0">
-            <music action="start" effect="muffled" channel-name="battle-theme" name="battle_theme"
-                   start="0:00" loop="true" loop-start="0:25" loop-end="2:20" start-effect="fade-in"
-                   end-effect="fade-away"/>
-            <!-- position should be in percentage -->
-            <character id="0" state="mildly_annoyed_1" blinking="false" position-x="10" position-y="20"/>
-            <character id="1" state="blank_expression" blinking="true" position-x="30" position-y="20"/>
-            <text speaker-id="0">
-                Get away from here you <glossary-entry id="0">true ancestor</glossary-entry> imposter!
+<chapter title="takeru beasts 100000 beta by himself while everyone is just like who is this god">
+    <scenario id="0">
+        <assets src="source examples/assets.vnassets"/>
+        <entry id="0" transmission="fade-in" interactable="false" defer-interaction="true">
+            <music-event action="start" track="alarm" repeatable="true"/>
+            <music-event action="apply-effects" track="alarm" effect-names="distortion overdrive"/>
+            <character id="0" state="idle_0" x-pos="20" y-pos="20"/>
+            <text character-id="0" char-name-pattern='{{ prefix + " " + name + " " + surname }}'
+                type="char-text" voice="dialog_0" x-center="true" y-pos="5">
+                Command Post, this is Bravo Leader.<br/>
+                Currently at four thousand feet below ground level.<br/>
+                We've arrived at the innermost chambers.<br/>
+                Commencing reconnaissance of the assigned sector.
             </text>
         </entry>
-        <entry id="1" transition-style="slide-ltr">
-            <sound name="sword_clash_0" repeat="true" delay="5"/>
-            <effect id="5" asynchronous="true" repeat="true"/>
-            <effect id="3" asynchronous="false" queue="0"/>
-        </entry>
-        <entry id="2">
-            <character id="0" state="mildly_annoyed_1" blinking="false" position-x="10" position-y="20" priority="0"/>
-            <character id="1" state="blank_expression" blinking="false" position-x="30" position-y="20" priority="1"/>
-            <text speaker-id="1">
-                So that's how you are gonna approach me... huh...<br/>Not the wisest move I would say...
+        <entry id="1">
+            <background name="grass"/>
+            <character id="0" state="idle_0" x-pos="20" y-pos="20"/>
+            <text type="plain-text" character-id="1" voice="_dialog_0">
+                Bravo Leader, this is Command Post.<br/>
+                We can't get a visual from you - nothing but static on<br/>
+                our end. The relay cables must have been damaged.<br/>
+                Should we lose contact, your top priority<br/>
+                is to bring back the data. Understood?
             </text>
         </entry>
-        <entry id="3">
-            <music action="stop" channel-name="battle-theme"/>
-            <text style="centre-top thought">This might not be the best to approach him after all... I should...</text>
-            <choice-box>
-                <choice redirect="hf_1" value="back-attack-in-this-battle">Stab him from behind</choice>
-                <choice redirect="ubw_1" value="front-attack-in-this-battle">No after all that's the only way to do it. Like a man from the front.</choice>
-                <!-- Example redirect to a different chapter -->
-                <choice redirect="chapter_file/bad_end_3">I must run for now.</choice>
-            </choice-box>
+        <entry id="2" forward-to="1">
+            <background name="grass"/>
+            <character id="0" state="idle_0" x-pos="20" y-pos="20"/>
+            <text character-id="0" char-name-pattern='{{ prefix + " " + name + " " + surname }}'
+                  type="char-text" voice="dialog_0" x-center="true" y-pos="5">
+                Bravo Leader, copy that.
+            </text>
         </entry>
     </scenario>
-    <scenario id="1" name="hf_1">
-        <entry id="0" redirect="end_credits">
-            <text>This is an example how u can redirect without a choice box</text>
-        </entry>
-    </scenario>
-    <scenario id="2" name="end_credits">
+    <scenario id="1">
         <entry id="0">
-            <text>If this entry is finished and it has no redirect, the game will end/shut down!</text>
+            <assets src="source examples/assets.vnassets"/>
+            <text type="plain-text" x-pos="5" y-center="true">
+                I want to...
+            </text>
+            <choices>
+                <choice forwards-to="0">Go back to the previous scenario</choice>
+                <choice forwards-to="chapter_file/0">
+                    Go to the scenario of id equal to zero in the file named chapter_file.vnscript .
+                </choice>
+            </choices>
         </entry>
     </scenario>
 </chapter>

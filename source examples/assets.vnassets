@@ -1,0 +1,45 @@
+<assets>
+    <characters>
+        <character id="0">
+            <name>Meiya</name>
+            <surname>Mitsurugi</surname>
+            <prefix>2nd Lieutenant</prefix>
+<!--            <suffix>If u want to u can put a suffix here</suffix>-->
+            <color>purple</color>
+            <states>
+                <state name="idle_0" src="textures/grass.jpg"/>
+                <state name="idle_1" src="textures/grass.jpg"/>
+                <state name="idle_2" src="textures/grass.jpg"/>
+            </states>
+            <speeches>
+                <speech id="0" name="dialog_0" src="sounds/PTSD.ogg"/>
+                <speech id="1" name="dialog_1" src="sounds/PTSD.ogg"/>
+                <speech id="2" name="dialog_2" src="sounds/PTSD.ogg"/>
+            </speeches>
+        </character>
+        <character id="1">
+            <name>Takeru</name>
+            <surname>Shirogane</surname>
+            <prefix>2nd Lieutenant</prefix>
+            <color>purple</color>
+            <states>
+                <state name="idle_0" src="textures/grass.jpg"/>
+                <state name="idle_1" src="textures/grass.jpg"/>
+                <state name="idle_2" src="textures/grass.jpg"/>
+            </states>
+        </character>
+    </characters>
+    <songs>
+        <song name="assault_landing" src="sounds/PTSD.ogg"/>
+        <song name="alarm" src="sounds/PTSD.ogg"/>
+        <song name="assault_landing" src="sounds/PTSD.ogg"/>
+    </songs>
+    <sounds>
+        <sound name="slash_0" src="sounds/PTSD.ogg"/>
+        <sound name="slash_1" src="sounds/PTSD.ogg"/>
+        <sound name="slash_2" src="sounds/PTSD.ogg"/>
+    </sounds>
+    <backgrounds>
+        <background name="grass" src="textures/grass.jpg"/>
+    </backgrounds>
+</assets>
