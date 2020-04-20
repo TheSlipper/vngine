@@ -1,11 +1,11 @@
 <chapter title="takeru beasts 100000 beta by himself while everyone is just like who is this god">
     <scenario id="0">
-        <assets src="source examples/assets.vnassets"/>
+        <asset-path src="source examples/assets.vnassets"/>
         <entry id="0" transmission="fade-in" interactable="false" defer-interaction="true">
             <music-event action="start" track="alarm" repeatable="true"/>
             <music-event action="apply-effects" track="alarm" effect-names="distortion overdrive"/>
             <character id="0" state="idle_0" x-pos="20" y-pos="20"/>
-            <text character-id="0" char-name-pattern='{{ prefix + " " + name + " " + surname }}'
+            <text character-id="0" char-name-pattern='{{ .Prefix }} {{ .Name }} {{ .Surname }}'
                 type="char-text" voice="dialog_0" x-center="true" y-pos="5">
                 Command Post, this is Bravo Leader.<br/>
                 Currently at four thousand feet below ground level.<br/>

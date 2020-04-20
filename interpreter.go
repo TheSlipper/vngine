@@ -19,8 +19,9 @@
 package vngine
 
 import (
+	"encoding/xml"
 	"fmt"
-	"log"
+	"io/ioutil"
 	"strings"
 )
 
@@ -29,15 +30,11 @@ import (
 // This file contains a basic interpreter of the xml-based scripting language used by the engine called 'vnscript'.
 
 // newInterpreter is a simple constructor for the interpreter struct.
-func newInterpreter(scenarioPath string) (i interpreter, err error) {
-	fp, sc := scenarioPathToFilePath(scenarioPath)
-	cm, err := GetChapterFromFile(fp)
-	if err != nil {
-		return
-	}
-	i.currChapter = &cm
-	for _, v := range cm.Scenarios {
-		if v.Name == sc {
+func newInterpreter(scenarioPath string, scenarioID int) (i interpreter, err error) {
+	c, err := loadChapter(scenarioPath)
+	i.currChapter = &c
+	for _, v := range c.Scenarios {
+		if v.ID == scenarioID {
 			i.currScenario = &v
 		}
 	}
@@ -50,52 +47,76 @@ func newInterpreter(scenarioPath string) (i interpreter, err error) {
 
 // interpreter is an entity responsible for loading the data from the VNgine scripting language to corresponding models.
 type interpreter struct {
-	currChapter  *ChapterModel
-	currScenario *ScenarioModel
+	currChapter  *Chapter
+	currScenario *Scenario
 	currEntryID  int
 }
 
 // nextEntry is a function that returns the next entry model.
-func (i *interpreter) nextEntry() (em EntryModel) {
-	// If it is the end of the scenario then handle scenario switching
-	if i.currEntryID+1 == len(i.currScenario.Entries) {
-		i.currEntryID = -1
-		rPath := i.currScenario.Entries[i.currEntryID].RedirectPath
-		if rPath != "" {
-			fp, sc := scenarioPathToFilePath(rPath)
-			// if the next scenario is in a different chapter then load it
-			if fp != "" {
-				// Load up the different chapter
-				cm, err := GetChapterFromFile(fp)
-				if err != nil {
-					log.Fatal(err)
-				}
-				i.currChapter = &cm
-			}
-			// Search for the scenario in the current chapter
-			for _, v := range i.currChapter.Scenarios {
-				if v.Name == sc {
-					i.currScenario = &v
-				}
-			}
-		}
-	}
-	// Iterate to the next entry and return it
-	i.currEntryID++
-	em = i.currScenario.Entries[i.currEntryID]
+func (i *interpreter) nextEntry() (em Entry) {
+	//// If it is the end of the scenario then handle scenario switching
+	//if i.currEntryID+1 == len(i.currScenario.Entries) {
+	//	i.currEntryID = -1
+	//	rPath := i.currScenario.Entries[i.currEntryID].RedirectPath
+	//	if rPath != "" {
+	//		fp, sc := scenarioPathToFilePath(rPath)
+	//		// if the next scenario is in a different chapter then load it
+	//		if fp != "" {
+	//			// Load up the different chapter
+	//			cm, err := GetChapterFromFile(fp)
+	//			if err != nil {
+	//				log.Fatal(err)
+	//			}
+	//			i.currChapter = &cm
+	//		}
+	//		// Search for the scenario in the current chapter
+	//		for _, v := range i.currChapter.Scenarios {
+	//			if v.Name == sc {
+	//				i.currScenario = &v
+	//			}
+	//		}
+	//	}
+	//}
+	//// Iterate to the next entry and return it
+	//i.currEntryID++
+	//em = i.currScenario.Entries[i.currEntryID]
 	return
 }
 
-// scenarioPathToFilePath is a function that extracts the file path and scenario name from the scenario path.
-func scenarioPathToFilePath(sp string) (fp, sc string) {
+// scpathToFpath is a function that extracts the file path from the scenario path.
+func scpathToFpath(sp string) (path string, err error) {
+	// Tokenize the file path and if it's too short then return an error
 	parts := strings.Split(sp, "/")
-	sb := strings.Builder{}
+	if len(parts) < 2 {
+		err = fmt.Errorf("invalid format of the scenario path: '%s'", sp)
+		return
+	}
+	// Extract the filepath
+	var sb strings.Builder
 	sb.WriteString(parts[0])
 	for i := 1; i < len(parts)-1; i++ {
 		sb.WriteString("/")
 		sb.WriteString(parts[i])
 	}
-	sc = parts[len(parts)-1]
-	fp = sb.String() + ".vnscript"
+	sb.WriteString(".vnscript")
+	path = sb.String()
+	return
+}
+
+// loadChapter loads the chapter from the specified chapter path.
+func loadChapter(path string) (ch Chapter, err error) {
+	// Extract the file path from the scenario path
+	var fp string
+	fp, err = scpathToFpath(path)
+	if err != nil {
+		return
+	}
+
+	// Read the file
+	var script []byte
+	script, err = ioutil.ReadFile(fp)
+
+	// Unmarshall it into the chapter
+	err = xml.Unmarshal(script, &ch)
 	return
 }

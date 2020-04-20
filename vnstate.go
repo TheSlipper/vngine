@@ -26,12 +26,12 @@ import "github.com/faiface/pixel/pixelgl"
 // the visual novel (the game - reading, animations, etc.).
 
 func NewVNState(scenPath string) (vns VNState, err error) {
-	var interp interpreter
-	interp, err = newInterpreter(scenPath)
-	if err != nil {
-		return
-	}
-	vns.interp = &interp
+	//var interp interpreter
+	//interp, err = newInterpreter(scenPath)
+	//if err != nil {
+	//	return
+	//}
+	//vns.interp = &interp
 	return
 }
 
@@ -40,7 +40,7 @@ type VNState struct {
 	gd                *GameData
 	firstScenarioPath string
 	interp            *interpreter
-	currEntry         EntryModel
+	currEntry         Entry
 	name              string
 }
 

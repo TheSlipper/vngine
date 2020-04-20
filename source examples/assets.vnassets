@@ -11,11 +11,11 @@
                 <state name="idle_1" src="textures/grass.jpg"/>
                 <state name="idle_2" src="textures/grass.jpg"/>
             </states>
-            <speeches>
-                <speech id="0" name="dialog_0" src="sounds/PTSD.ogg"/>
-                <speech id="1" name="dialog_1" src="sounds/PTSD.ogg"/>
-                <speech id="2" name="dialog_2" src="sounds/PTSD.ogg"/>
-            </speeches>
+            <voices>
+                <voice id="0" name="dialog_0" src="sounds/PTSD.ogg"/>
+                <voice id="1" name="dialog_1" src="sounds/PTSD.ogg"/>
+                <voice id="2" name="dialog_2" src="sounds/PTSD.ogg"/>
+            </voices>
         </character>
         <character id="1">
             <name>Takeru</name>

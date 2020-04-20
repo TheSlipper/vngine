@@ -1,22 +1,17 @@
 package vngine
 
 import (
+	"fmt"
 	"testing"
 )
 
 // TestScenarioParsing the parsing of a correctly formatted vngine script file.
 func TestScenarioParsing(t *testing.T) {
-	filePath := "source examples/chapter.vnscript"
-	_, err := GetChapterFromFile(filePath)
+	filePath := "source examples/chapter/0"
+	x, err := loadChapter(filePath)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		t.Fail()
 	}
-	_, err = GetScenarioFromFileByID(0, filePath)
-	if err != nil {
-		panic(err)
-	}
-	_, err = GetScenarioFromFileByName("introduction_5", filePath)
-	if err != nil {
-		panic(err)
-	}
+	fmt.Println(x)
 }

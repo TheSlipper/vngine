@@ -20,158 +20,94 @@ package vngine
 
 import (
 	"encoding/xml"
-	"fmt"
-	"io/ioutil"
 )
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////// SHORT DESCRIPTION
-// This file contains all of the models and functions used for extraction and representation of the engine's
+// This file contains all of the structs used for extraction and representation of the engine's
 // scripting language.
 
-// GetChapterFromFile reads the xml file and parses it into the defined models.
-func GetChapterFromFile(file string) (cm ChapterModel, err error) {
-	var xmlData []byte
-	xmlData, err = ioutil.ReadFile(file)
-	if err != nil {
-		err = fmt.Errorf("error while trying to read from the file '%s': %+v", file, err)
-		return
-	}
-	err = xml.Unmarshal(xmlData, &cm)
-	if err != nil {
-		err = fmt.Errorf("error while trying to interpret chapter file '%s': %+v", file, err)
-	}
-	return
+// Chapter represents the chapter element in the vnscript file.
+type Chapter struct {
+	XMLName   xml.Name   `xml:"chapter"`
+	Title     string     `xml:"title,attr"`
+	Scenarios []Scenario `xml:"scenario"`
 }
 
-// GetScenarioFromFileByName reads the xml file and extracts the given scenario from the file.
-func GetScenarioFromFileByName(name, file string) (sc ScenarioModel, err error) {
-	var cm ChapterModel
-	cm, err = GetChapterFromFile(file)
-	if err != nil {
-		return
-	}
-	for _, sci := range cm.Scenarios {
-		if sci.Name == name {
-			sc = sci
-			return
-		}
-	}
-	err = fmt.Errorf("no such specified scenario as '%s' in the chapter '%s'", name, cm.Name)
-	return
+// Scenario represents the scenario elements in the vnscript file.
+type Scenario struct {
+	XMLName xml.Name  `xml:"scenario"`
+	ID      int       `xml:"id,attr"`
+	Assets  AssetPath `xml:"asset-path"`
+	Entries []Entry   `xml:"entry"`
 }
 
-// GetScenarioFromFileByID reads the xml file and extracts the given scenario from the file.
-func GetScenarioFromFileByID(id int, file string) (sc ScenarioModel, err error) {
-	var cm ChapterModel
-	cm, err = GetChapterFromFile(file)
-	if err != nil {
-		return
-	}
-	for _, sci := range cm.Scenarios {
-		if sci.ID == id {
-			sc = sci
-			return
-		}
-	}
-	err = fmt.Errorf("scenario with the '%d' id was not found in the chapter '%s'", id, cm.Name)
-	return
+// AssetPath represents the asset-path elements in the vnscript file.
+type AssetPath struct {
+	XMLName xml.Name `xml:"asset-path"`
+	Source  string   `xml:"src,attr"`
 }
 
-// ChapterModel represents a chapter in a novel scripting file.
-type ChapterModel struct {
-	XMLName   xml.Name        `xml:"chapter"`
-	ID        int             `xml:"id,attr"`
-	Name      string          `xml:"name,attr"`
-	Scenarios []ScenarioModel `xml:"scenario"`
+// Entry represents the entry elements in the vnscript file.
+type Entry struct {
+	XMLName          xml.Name     `xml:"entry"`
+	ID               int          `xml:"id,attr"`
+	Transmission     string       `xml:"transmission,attr"`
+	Interactable     bool         `xml:"interactable,attr"`
+	DeferInteraction bool         `xml:"defer-interaction,attr"`
+	ForwardTo        string       `xml:"forward-to,attr"`
+	BG               Background   `xml:"background"`
+	MusicEvents      []MusicEvent `xml:"music-event"`
+	Chars            []Character  `xml:"character"`
+	Texts            []Text       `xml:"text"`
+	Choices          Choices      `xml:"choices"`
 }
 
-// ScenarioModel represents a part of a chapter.
-type ScenarioModel struct {
-	XMLName xml.Name     `xml:"scenario"`
-	ID      int          `xml:"id,attr"`
-	Name    string       `xml:"name,attr"`
-	Entries []EntryModel `xml:"entry"`
-	Assets  AssetsModel  `xml:"assets"`
+// Background represents the background elements in the vnscript file.
+type Background struct {
+	XMLName xml.Name `xml:"background"`
+	Name    string   `xml:"name,attr"`
 }
 
-type AssetsModel struct {
-	XMLName xml.Name `xml:"assets"`
-	// TODO:
+// MusicEvent represents the music-event elements in the vnscript file.
+type MusicEvent struct {
+	XMLName     xml.Name `xml:"music-event"`
+	Action      string   `xml:"action,attr"`
+	Track       string   `xml:"track,attr"`
+	Repeatable  bool     `xml:"repeatable,attr"`
+	EffectNames string   `xml:"effect-names,attr"`
 }
 
-// EntryModel represents a single frame in the novel.
-type EntryModel struct {
-	XMLName         xml.Name         `xml:"entry"`
-	ID              int              `xml:"id,attr"`
-	TransitionStyle string           `xml:"transition-style,attr"`
-	RedirectPath    string           `xml:"redirect,attr"`
-	Characters      []CharacterModel `xml:"character"`
-	MusicEvents     []MusicModel     `xml:"music"`
-	Sounds          []SoundModel     `xml:"sound"`
-	Text            TextModel        `xml:"text"`
-	ChoiceBox       ChoiceBoxModel   `xml:"choice-box"`
+// Character represents the character elements in the vnscript file.
+type Character struct {
+	XMLName xml.Name `xml:"character"`
+	ID      int      `xml:"id,attr"`
+	State   string   `xml:"state,attr"`
+	XPos    float32  `xml:"x-pos,attr"`
+	YPos    float32  `xml:"y-pos,attr"`
 }
 
-// MusicModel represents a music event entry that occurs in a given frame.
-type MusicModel struct {
-	XMLName            xml.Name `xml:"music"`
-	ActionName         string   `xml:"action,attr"`
-	AppliedEffect      string   `xml:"effect,attr"`
-	ChannelName        string   `xml:"channel-name,attr"`
-	MusicName          string   `xml:"name,attr"`
-	StartTimestamp     string   `xml:"start,attr"`
-	Loops              bool     `xml:"loop,attr"`
-	LoopStartTimestamp string   `xml:"loop-start,attr"`
-	LoopEndTimestamp   string   `xml:"loop-end,attr"`
-	StartEffect        string   `xml:"start-effect,attr"`
-	EndEffect          string   `xml:"end-effect,attr"`
+// Text represents the text elements in the vnscript file.
+type Text struct {
+	XMLName         xml.Name `xml:"text"`
+	Type            string   `xml:"type,attr"`
+	CharID          int      `xml:"character-id,attr"`
+	CharNamePattern string   `xml:"char-name-pattern,attr"`
+	Voice           string   `xml:"voice,attr"`
+	XPos            float32  `xml:"x-pos,attr"`
+	YPos            float32  `xml:"y-pos,attr"`
+	XCenter         bool     `xml:"x-center,attr"`
+	YCenter         bool     `xml:"y-center,attr"`
 }
 
-// SoundModel represents a sound that occurs in a given frame.
-type SoundModel struct {
-	Name   string `xml:"name,attr"`
-	Repeat bool   `xml:"repeat,attr"`
-	Delay  uint8  `xml:"delay,attr"`
+// Choices represents the choices elements in the vnscript file.
+type Choices struct {
+	XMLName xml.Name `xml:"choices"`
+	Entries []Choice `xml:"choice"`
 }
 
-// EffectModel represents a definition of either a visual effect or an animation that will take place in the given frame.
-type EffectModel struct {
-	XMLName      xml.Name `xml:"effect"`
-	ID           int      `xml:"id,attr"`
-	Asynchronous bool     `xml:"asynchronous,attr"`
-	Repeat       bool     `xml:"repeat,attr"`
-	QueueIndex   uint8    `xml:"queue,attr"`
-}
-
-// CharacterModel represents a setup of the character on the screen in a given frame.
-type CharacterModel struct {
-	XMLName   xml.Name `xml:"character"`
-	ID        int      `xml:"id,attr"`
-	State     string   `xml:"State,attr"`
-	Blinking  bool     `xml:"blinking,attr"`
-	PositionX uint8    `xml:"position-x,attr"`
-	PositionY uint8    `xml:"position-y,attr"`
-	Priority  uint8    `xml:"priority,attr"`
-}
-
-// TextModel represents text data that will be displayed in the given novel's frame.
-type TextModel struct {
-	XMLName   xml.Name `xml:"text"`
-	SpeakerID int      `xml:"speaker-id,attr"`
-	Content   string   `xml:",chardata"`
-}
-
-// ChoiceBoxModel represents all the data that the user will be able to choose.
-type ChoiceBoxModel struct {
-	XMLName xml.Name      `xml:"choice-box"`
-	Choices []ChoiceModel `xml:"choice"`
-}
-
-// ChoiceModel contains information on a single choice that a user will be able to choose.
-type ChoiceModel struct {
-	XMLName      xml.Name `xml:"choice"`
-	RedirectPath string   `xml:"redirect,attr"`
-	Value        string   `xml:"value,attr"`
-	Content      string   `xml:",chardata"`
+// Choice represents the choice elements in the vnscript file.
+type Choice struct {
+	XMLName    xml.Name `xml:"choice"`
+	ForwardsTo string   `xml:"forwards-to,attr"`
 }
