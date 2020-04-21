@@ -18,20 +18,29 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package vngine
 
-import "github.com/faiface/pixel/pixelgl"
+import (
+	"github.com/faiface/pixel/pixelgl"
+	"strconv"
+)
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////// SHORT DESCRIPTION
 // This file contains an implementation of the state interface that is responsible for the main state of
 // the visual novel (the game - reading, animations, etc.).
 
-func NewVNState(scenPath string) (vns VNState, err error) {
-	//var interp interpreter
-	//interp, err = newInterpreter(scenPath)
-	//if err != nil {
-	//	return
-	//}
-	//vns.interp = &interp
+func NewVNState(scpath string, gd *GameData) (vns VNState, err error) {
+	var interp interpreter
+	interp, err = newInterpreter(scpath)
+	if err != nil {
+		return
+	}
+	vns.interp = &interp
+	vns.gd = gd
+	vns.currEntry, err = vns.interp.nextEntry()
+	if err != nil {
+		return
+	}
+	DebugLog("Entry ID: " + strconv.Itoa(vns.currEntry.ID) + "; Text content: " + vns.currEntry.Texts[0].InnerTxt)
 	return
 }
 
@@ -44,14 +53,26 @@ type VNState struct {
 	name              string
 }
 
+// Init initializes the visual novel state.
 func (vns *VNState) Init() {
+	var err error
 	vns.name = "vngine interpreter state"
-	vns.currEntry = vns.interp.nextEntry()
+	vns.currEntry, err = vns.interp.nextEntry()
+	if err != nil {
+		DebugLog(err.Error())
+		vns.gd.StateMachine.rmTopState()
+	}
 }
 
+// HandleInput executes given actions on given user input events.
 func (vns *VNState) HandleInput() {
 	if vns.gd.Window.JustPressed(pixelgl.MouseButtonLeft) {
-		DebugLog("Left mouse button clicked")
+		var err error
+		vns.currEntry, err = vns.interp.nextEntry()
+		if err != nil {
+			DebugLog(err.Error())
+		}
+		DebugLog("Entry ID: " + strconv.Itoa(vns.currEntry.ID) + "; Text content: " + vns.currEntry.Texts[0].InnerTxt)
 		// TODO: Some kind of check for clicking the UI
 	} else if vns.gd.Window.JustPressed(pixelgl.MouseButtonRight) {
 		DebugLog("Right mouse button clicked")
@@ -62,22 +83,27 @@ func (vns *VNState) HandleInput() {
 	}
 }
 
+// Update updates some data of the game when called.
 func (vns *VNState) Update(dt float64) {
 	// TODO: Maybe delete since there is no physics here?
 }
 
+// Draw is a method called when the vngine is ready to draw the state.
 func (vns *VNState) Draw(dt float64) {
 
 }
 
+// Pause pauses the execution of the state.
 func (vns *VNState) Pause() {
 
 }
 
+// Resume resumes the execution of the state.
 func (vns *VNState) Resume() {
 
 }
 
+// Name returns the name of the state.
 func (vns *VNState) Name() string {
 	return vns.name
 }

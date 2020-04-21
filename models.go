@@ -98,6 +98,7 @@ type Text struct {
 	YPos            float32  `xml:"y-pos,attr"`
 	XCenter         bool     `xml:"x-center,attr"`
 	YCenter         bool     `xml:"y-center,attr"`
+	InnerTxt        string   `xml:",innerxml"`
 }
 
 // Choices represents the choices elements in the vnscript file.
