@@ -36,11 +36,11 @@ func NewVNState(scpath string, gd *GameData) (vns VNState, err error) {
 	}
 	vns.interp = &interp
 	vns.gd = gd
-	vns.currEntry, err = vns.interp.nextEntry()
+	vns.currEntry, _, err = vns.interp.nextEntry()
 	if err != nil {
 		return
 	}
-	DebugLog("Entry ID: " + strconv.Itoa(vns.currEntry.ID) + "; Text content: " + vns.currEntry.Texts[0].InnerTxt)
+	DebugLog("SEntry ID: " + strconv.Itoa(vns.currEntry.ID) + "; SText content: " + vns.currEntry.Texts[0].InnerTxt)
 	return
 }
 
@@ -49,30 +49,25 @@ type VNState struct {
 	gd                *GameData
 	firstScenarioPath string
 	interp            *interpreter
-	currEntry         Entry
+	currEntry         SEntry
 	name              string
 }
 
 // Init initializes the visual novel state.
 func (vns *VNState) Init() {
-	var err error
+	//var err error
 	vns.name = "vngine interpreter state"
-	vns.currEntry, err = vns.interp.nextEntry()
-	if err != nil {
-		DebugLog(err.Error())
-		vns.gd.StateMachine.rmTopState()
-	}
+	//vns.currEntry, err = vns.interp.nextEntry()
+	//if err != nil {
+	//	DebugLog(err.Error())
+	//	vns.gd.StateMachine.rmTopState()
+	//}
 }
 
 // HandleInput executes given actions on given user input events.
 func (vns *VNState) HandleInput() {
 	if vns.gd.Window.JustPressed(pixelgl.MouseButtonLeft) {
-		var err error
-		vns.currEntry, err = vns.interp.nextEntry()
-		if err != nil {
-			DebugLog(err.Error())
-		}
-		DebugLog("Entry ID: " + strconv.Itoa(vns.currEntry.ID) + "; Text content: " + vns.currEntry.Texts[0].InnerTxt)
+		vns.nextEntry()
 		// TODO: Some kind of check for clicking the UI
 	} else if vns.gd.Window.JustPressed(pixelgl.MouseButtonRight) {
 		DebugLog("Right mouse button clicked")
@@ -108,6 +103,16 @@ func (vns *VNState) Name() string {
 	return vns.name
 }
 
-func (vns *VNState) loadAssets() {
-
+func (vns *VNState) nextEntry() {
+	// Set the next state data
+	var err error
+	var newScenario bool
+	vns.currEntry, newScenario, err = vns.interp.nextEntry()
+	if err != nil {
+		DebugLog(err.Error())
+	} else if newScenario {
+		// TODO: Load stuff
+	}
+	//
+	DebugLog("SEntry ID: " + strconv.Itoa(vns.currEntry.ID) + "; SText content: " + vns.currEntry.Texts[0].InnerTxt)
 }

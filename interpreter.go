@@ -58,20 +58,21 @@ func newInterpreter(scpath string) (i interpreter, err error) {
 
 // interpreter is an entity responsible for loading the data from the VNgine scripting language to corresponding models.
 type interpreter struct {
-	chapter *Chapter
+	chapter *SChapter
 	scID    int
 	enID    int
 	fwdPath string
 }
 
-// nextEntry is a function that returns the next entry model.
-func (i *interpreter) nextEntry() (em Entry, err error) {
+// nextEntry is a function that returns the next entry model and the information on whether it also loaded next scenario.
+func (i *interpreter) nextEntry() (em SEntry, ns bool, err error) {
 	// If it is the end of the scenario, load the next one
 	if i.enID == len(i.chapter.Scenarios[i.scID].Entries) {
 		err = i.loadNextScenario()
 		if err != nil {
 			return
 		}
+		ns = true
 	}
 	// Load the entry
 	em = i.chapter.Scenarios[i.scID].Entries[i.enID]
@@ -89,7 +90,7 @@ func (i *interpreter) nextEntry() (em Entry, err error) {
 func (i *interpreter) loadNextScenario() (err error) {
 	// if there was a forwarding scheduled then handle that
 	if i.fwdPath != "" {
-		var ch Chapter
+		var ch SChapter
 		ch, err = loadChapter(i.fwdPath)
 		if err != nil {
 			// Check if the error is caused by the fact that the forward is towards a scenario inside
@@ -122,7 +123,7 @@ func (i *interpreter) loadNextScenario() (err error) {
 }
 
 // loadChapter loads the chapter from the specified scenario path.
-func loadChapter(path string) (ch Chapter, err error) {
+func loadChapter(path string) (ch SChapter, err error) {
 	// Extract the file path from the scenario path
 	var fp string
 	fp, err = scpathToFpath(path)

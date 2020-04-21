@@ -131,6 +131,7 @@ func (g *game) Run(st *State) {
 		// Handle the input, game logic and drawing
 		s.HandleInput()
 		s.Update(dt)
+		g.GameData.Window.Clear(colornames.Black)
 		s.Draw(dt)
 
 		// If debugging then also draw the debug data

@@ -25,52 +25,55 @@ import (
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////// SHORT DESCRIPTION
 // This file contains all of the structs used for extraction and representation of the engine's
-// scripting language.
+// scripting language. Models with the 'S' prefix are used in vnscripts file and
+// models with the 'A' prefix are used in vnassets file.
 
-// Chapter represents the chapter element in the vnscript file.
-type Chapter struct {
-	XMLName   xml.Name   `xml:"chapter"`
-	Title     string     `xml:"title,attr"`
-	Scenarios []Scenario `xml:"scenario"`
+////////////////////////////////////////////////////////////// VNSCRIPT MODELS
+
+// SChapter represents the chapter element in the vnscript file.
+type SChapter struct {
+	XMLName   xml.Name    `xml:"chapter"`
+	Title     string      `xml:"title,attr"`
+	Scenarios []SScenario `xml:"scenario"`
 }
 
-// Scenario represents the scenario elements in the vnscript file.
-type Scenario struct {
-	XMLName xml.Name  `xml:"scenario"`
-	ID      int       `xml:"id,attr"`
-	Assets  AssetPath `xml:"asset-path"`
-	Entries []Entry   `xml:"entry"`
+// SScenario represents the scenario elements in the vnscript file.
+type SScenario struct {
+	XMLName xml.Name   `xml:"scenario"`
+	ID      int        `xml:"id,attr"`
+	Assets  SAssetPath `xml:"asset-path"`
+	Entries []SEntry   `xml:"entry"`
 }
 
-// AssetPath represents the asset-path elements in the vnscript file.
-type AssetPath struct {
+// SAssetPath represents the asset-path elements in the vnscript file.
+type SAssetPath struct {
 	XMLName xml.Name `xml:"asset-path"`
 	Source  string   `xml:"src,attr"`
 }
 
-// Entry represents the entry elements in the vnscript file.
-type Entry struct {
-	XMLName          xml.Name     `xml:"entry"`
-	ID               int          `xml:"id,attr"`
-	Transmission     string       `xml:"transmission,attr"`
-	Interactable     bool         `xml:"interactable,attr"`
-	DeferInteraction bool         `xml:"defer-interaction,attr"`
-	ForwardTo        string       `xml:"forward-to,attr"`
-	BG               Background   `xml:"background"`
-	MusicEvents      []MusicEvent `xml:"music-event"`
-	Chars            []Character  `xml:"character"`
-	Texts            []Text       `xml:"text"`
-	Choices          Choices      `xml:"choices"`
+// SEntry represents the entry elements in the vnscript file.
+type SEntry struct {
+	XMLName          xml.Name      `xml:"entry"`
+	ID               int           `xml:"id,attr"`
+	Transmission     string        `xml:"transmission,attr"`
+	Interactable     bool          `xml:"interactable,attr"`
+	DeferInteraction bool          `xml:"defer-interaction,attr"`
+	ForwardTo        string        `xml:"forward-to,attr"`
+	BG               SBackground   `xml:"background"`
+	MusicEvents      []SMusicEvent `xml:"music-event"`
+	Chars            []SCharacter  `xml:"character"`
+	Texts            []SText       `xml:"text"`
+	Choices          SChoices      `xml:"choices"`
 }
 
-// Background represents the background elements in the vnscript file.
-type Background struct {
+// SBackground represents the background elements in the vnscript file.
+type SBackground struct {
 	XMLName xml.Name `xml:"background"`
 	Name    string   `xml:"name,attr"`
 }
 
-// MusicEvent represents the music-event elements in the vnscript file.
-type MusicEvent struct {
+// SMusicEvent represents the music-event elements in the vnscript file.
+type SMusicEvent struct {
 	XMLName     xml.Name `xml:"music-event"`
 	Action      string   `xml:"action,attr"`
 	Track       string   `xml:"track,attr"`
@@ -78,8 +81,8 @@ type MusicEvent struct {
 	EffectNames string   `xml:"effect-names,attr"`
 }
 
-// Character represents the character elements in the vnscript file.
-type Character struct {
+// SCharacter represents the character elements in the vnscript file.
+type SCharacter struct {
 	XMLName xml.Name `xml:"character"`
 	ID      int      `xml:"id,attr"`
 	State   string   `xml:"state,attr"`
@@ -87,8 +90,8 @@ type Character struct {
 	YPos    float32  `xml:"y-pos,attr"`
 }
 
-// Text represents the text elements in the vnscript file.
-type Text struct {
+// SText represents the text elements in the vnscript file.
+type SText struct {
 	XMLName         xml.Name `xml:"text"`
 	Type            string   `xml:"type,attr"`
 	CharID          int      `xml:"character-id,attr"`
@@ -101,14 +104,21 @@ type Text struct {
 	InnerTxt        string   `xml:",innerxml"`
 }
 
-// Choices represents the choices elements in the vnscript file.
-type Choices struct {
-	XMLName xml.Name `xml:"choices"`
-	Entries []Choice `xml:"choice"`
+// SChoices represents the choices elements in the vnscript file.
+type SChoices struct {
+	XMLName xml.Name  `xml:"choices"`
+	Entries []SChoice `xml:"choice"`
 }
 
-// Choice represents the choice elements in the vnscript file.
-type Choice struct {
+// SChoice represents the choice elements in the vnscript file.
+type SChoice struct {
 	XMLName    xml.Name `xml:"choice"`
 	ForwardsTo string   `xml:"forwards-to,attr"`
 }
+
+////////////////////////////////////////////////////////////// VNASSETS MODELS
+
+type AAssets struct {
+
+}
+
